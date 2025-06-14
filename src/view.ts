@@ -77,9 +77,10 @@ export class InterBrainView extends ItemView {
     const directLinkSet = new Set<string>([...forwardSet, ...backSet]);
 
     // ** Outgoing Links Section **
-    contentEl.createEl("h4", { text: "Linked notes (outgoing):" });
+    const outgoingBody = this.addSection("Linked notes (outgoing)", contentEl);
+    outgoingBody.createEl("h4", { text: "Linked notes (outgoing):" });
     if (forwardSet.size > 0) {
-      const list = contentEl.createEl("ul");
+      const list = outgoingBody.createEl("ul");
       forwardSet.forEach(path => {
         const targetFile = this.app.vault.getAbstractFileByPath(path);
         if (targetFile && targetFile instanceof TFile && targetFile.extension === "md") {
@@ -92,7 +93,7 @@ export class InterBrainView extends ItemView {
         }
       });
     } else {
-      contentEl.createEl("div", { text: "None", cls: "interbrain-none" });
+      outgoingBody.createEl("div", { text: "None", cls: "interbrain-none" });
     }
 
     // ** Incoming Links Section **
@@ -315,6 +316,25 @@ export class InterBrainView extends ItemView {
         }
       }
     }
+
+    // 2) Quick‑Link icon in each <li>
+    if (this.settings.enableQuickLinkButtons) {
+      const plus = item.createEl("span", { cls: "interbrain-plus", text: " ➕" });
+      plus.onclick = (ev) => {
+        ev.preventDefault(); ev.stopPropagation();
+        this.insertLinkTo(sugFile.basename);
+      };
+    }
+  }
+
+  // 1) Collapsible sections helper
+  private addSection(header: string, container: HTMLElement): HTMLElement {
+    const wrap = container.createEl("div", { cls: "interbrain-section" });
+    const h = wrap.createEl("h4", { text: header, cls: "interbrain-h4" });
+    const body = wrap.createEl("div", { cls: "interbrain-body" });
+
+    h.onclick = () => body.toggleClass("is-collapsed");
+    return body;
   }
 
   /** Open a file in the main workspace (without affecting the InterBrain view) */
@@ -328,3 +348,18 @@ export class InterBrainView extends ItemView {
     return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
   }
 }
+
+// 3) insertLinkTo helper at bottom of class
+private insertLinkTo(linkTarget: string) {
+  const editor = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor;
+  const linkText = `[[${linkTarget}]]`;
+  if (editor) {
+    editor.replaceSelection(linkText);
+  } else {
+    // no editor open (reading view) – append to end
+    const file = this.app.workspace.getActiveFile();
+    if (file)
+      this.app.vault.append(file, `\n${linkText}`);
+  }
+}
+

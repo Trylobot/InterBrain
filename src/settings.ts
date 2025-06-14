@@ -8,6 +8,10 @@ export interface InterBrainSettings {
   includeMentionSuggestions: boolean;
   includeSiblingSuggestions: boolean;
   maxSuggestionsPerCategory: number;
+  /** NEW 0.3.0 */
+  enableQuickLinkButtons: boolean;
+  enableTagIndex: boolean;
+  batchWizardWrite: boolean;   // true=write links, false=preview only
 }
 
 // Default settings values
@@ -15,7 +19,11 @@ export const DEFAULT_SETTINGS: InterBrainSettings = {
   includeTagSuggestions: true,
   includeMentionSuggestions: true,
   includeSiblingSuggestions: true,
-  maxSuggestionsPerCategory: 5
+  maxSuggestionsPerCategory: 5,
+
+  enableQuickLinkButtons: true,
+  enableTagIndex: true,
+  batchWizardWrite: false,  
 };
 
 export class InterBrainSettingTab extends PluginSettingTab {
@@ -80,5 +88,26 @@ export class InterBrainSettingTab extends PluginSettingTab {
             this.plugin.saveSettings();
           });
       });
+
+    // In SettingTab.display(): add three more controls
+    new Setting(containerEl)
+      .setName("Enable Quick‑Link buttons")
+      .setDesc("Show a ➕ icon next to each suggestion to insert the link into the current editor.")
+      .addToggle(t => t.setValue(this.plugin.settings.enableQuickLinkButtons)
+        .onChange(v => { this.plugin.settings.enableQuickLinkButtons = v; this.plugin.saveSettings(); }));
+
+    new Setting(containerEl)
+      .setName("Enable Tag Indexing")
+      .setDesc("Maintain a live in‑memory tag map for faster tag suggestions (uses more RAM but faster).")
+      .addToggle(t => t.setValue(this.plugin.settings.enableTagIndex)
+        .onChange(v => { this.plugin.settings.enableTagIndex = v; this.plugin.saveSettings(); }));
+
+    new Setting(containerEl)
+      .setName("Batch Link Wizard ‑ write changes")
+      .setDesc("If ON, the wizard will write links; if OFF, it only shows a preview count.")
+      .addToggle(t => t.setValue(this.plugin.settings.batchWizardWrite)
+        .onChange(v => { this.plugin.settings.batchWizardWrite = v; this.plugin.saveSettings(); }));
+
+    
   }
 }

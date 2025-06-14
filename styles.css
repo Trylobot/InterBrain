@@ -4,3 +4,7 @@
 .graph-wrapper svg:active {
   cursor: grabbing;
 }
+.interbrain-section .interbrain-body.is-collapsed { display:none; }
+.interbrain-section h4 { cursor:pointer; }
+.interbrain-plus { cursor:pointer; opacity:0.6; }
+.interbrain-plus:hover { opacity:1; }
