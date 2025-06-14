@@ -1,0 +1,6 @@
+.graph-wrapper svg {
+  cursor: grab;
+}
+.graph-wrapper svg:active {
+  cursor: grabbing;
+}

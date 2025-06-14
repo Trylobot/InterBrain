@@ -1,0 +1,10 @@
+{
+  "id": "interbrain",
+  "name": "InterBrain",
+  "version": "0.1.0",
+  "minAppVersion": "1.6.0",
+  "author": "OpenAI ChatGPT",
+  "description": "DreamNodes, Liminal Web & DreamWeaving inside Obsidian.",
+  "main": "dist/main.js",
+  "isDesktopOnly": true
+}

@@ -1,88 +1,24 @@
 {
-  "name": "dreamspace",
-  "version": "0.1.0",
   "private": true,
-  "main": "public/electron.js",
-  "homepage": "./",
-  "dependencies": {
-    "@react-three/drei": "^9.88.17",
-    "@react-three/fiber": "^8.15.11",
-    "adm-zip": "^0.5.16",
-    "archiver": "^7.0.1",
-    "electron-is-dev": "^2.0.0",
-    "electron-store": "^8.1.0",
-    "gsap": "^3.12.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "react-select": "^5.7.0",
-    "three": "^0.159.0"
-  },
+  "name": "interbrain-obsidian-plugin",
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron-dev": "concurrently \"BROWSER=none npm start\" \"wait-on http://localhost:3000 && electron .\"",
-    "electron": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dist:mac": "electron-builder --mac --universal",
-    "dist:win": "electron-builder --win",
-    "dist:linux": "electron-builder --linux"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "dev": "rollup -c -w",
+    "build": "rollup -c"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@testing-library/jest-dom": "^6.5.0",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.5.1",
-    "concurrently": "^8.2.2",
-    "electron": "^27.0.3",
-    "electron-builder": "^24.6.4",
-    "wait-on": "^7.2.0"
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "obsidian": "1.8.7",
+    "rollup": "^4.17.0",
+    "rollup-plugin-esbuild": "^6.1.0",
+    "typescript": "^5.4.5"
   },
-  "build": {
-    "appId": "com.projectliminality.app",
-    "productName": "ProjectLiminality",
-    "files": [
-      "build/**/*",
-      "node_modules/**/*",
-      "package.json",
-      "src/**/*"
-    ],
-    "directories": {
-      "buildResources": "assets"
-    },
-    "mac": {
-      "category": "public.app-category.graphics-design",
-      "icon": "assets/icon.png",
-      "target": ["dmg", "zip"]
-    },
-    "win": {
-      "target": ["nsis", "portable"],
-      "icon": "assets/icon.png"
-    },
-    "linux": {
-      "target": ["AppImage", "deb"],
-      "icon": "assets/icon.png"
-    }
+  "dependencies": {
+    "d3": "^7.9.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "simple-git": "^3.28.0"
   }
 }
