@@ -9,6 +9,7 @@
     "@react-three/fiber": "^8.15.11",
     "adm-zip": "^0.5.16",
     "archiver": "^7.0.1",
+    "d3": "^7.9.0",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.1.0",
     "gsap": "^3.12.2",
@@ -74,14 +75,23 @@
     "mac": {
       "category": "public.app-category.graphics-design",
       "icon": "assets/icon.png",
-      "target": ["dmg", "zip"]
+      "target": [
+        "dmg",
+        "zip"
+      ]
     },
     "win": {
-      "target": ["nsis", "portable"],
+      "target": [
+        "nsis",
+        "portable"
+      ],
       "icon": "assets/icon.png"
     },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "icon": "assets/icon.png"
     }
   }
