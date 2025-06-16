@@ -1,5 +1,5 @@
 // view.ts
-import { ItemView, WorkspaceLeaf, TFile } from "obsidian";
+import { ItemView, WorkspaceLeaf, TFile, MarkdownView } from "obsidian";
 import type { InterBrainSettings } from "./settings";
 
 export const VIEW_TYPE_INTERBRAIN = "INTERBRAIN-VIEW";
@@ -203,6 +203,9 @@ export class InterBrainView extends ItemView {
               ev.preventDefault();
               this.openFile(sugFile);
             };
+            if (this.settings.enableQuickLinkButtons) {
+              this.addQuickLinkIcon(item, sugFile.basename);
+            }
           }
           if (tagSuggestions.length > maxSuggest) {
             list.createEl("li", { text: `…and ${tagSuggestions.length - maxSuggest} more`, cls: "interbrain-more" });
@@ -251,6 +254,9 @@ export class InterBrainView extends ItemView {
             ev.preventDefault();
             this.openFile(sugFile);
           };
+          if (this.settings.enableQuickLinkButtons) {
+            this.addQuickLinkIcon(item, sugFile.basename);
+          }
         }
         if (mentionSuggestions.length > maxSuggest) {
           list.createEl("li", { text: `…and ${mentionSuggestions.length - maxSuggest} more`, cls: "interbrain-more" });
@@ -310,6 +316,9 @@ export class InterBrainView extends ItemView {
             ev.preventDefault();
             this.openFile(sugFile);
           };
+          if (this.settings.enableQuickLinkButtons) {
+            this.addQuickLinkIcon(item, sugFile.basename);
+          }
         }
         if (siblingSuggestions.length > maxSuggest) {
           list.createEl("li", { text: `…and ${siblingSuggestions.length - maxSuggest} more`, cls: "interbrain-more" });
@@ -317,14 +326,6 @@ export class InterBrainView extends ItemView {
       }
     }
 
-    // 2) Quick‑Link icon in each <li>
-    if (this.settings.enableQuickLinkButtons) {
-      const plus = item.createEl("span", { cls: "interbrain-plus", text: " ➕" });
-      plus.onclick = (ev) => {
-        ev.preventDefault(); ev.stopPropagation();
-        this.insertLinkTo(sugFile.basename);
-      };
-    }
   }
 
   // 1) Collapsible sections helper
@@ -347,19 +348,29 @@ export class InterBrainView extends ItemView {
   private escapeRegExp(str: string): string {
     return str.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
   }
-}
 
-// 3) insertLinkTo helper at bottom of class
-private insertLinkTo(linkTarget: string) {
-  const editor = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor;
-  const linkText = `[[${linkTarget}]]`;
-  if (editor) {
-    editor.replaceSelection(linkText);
-  } else {
-    // no editor open (reading view) – append to end
-    const file = this.app.workspace.getActiveFile();
-    if (file)
-      this.app.vault.append(file, `\n${linkText}`);
+  /** Create a clickable ➕ icon that inserts a wikilink to the given file */
+  private addQuickLinkIcon(item: HTMLElement, fileBasename: string) {
+    const plus = item.createEl("span", {
+      cls: "interbrain-plus",
+      text: " ➕",
+    });
+    plus.onclick = (ev) => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      this.insertLinkTo(fileBasename);
+    };
+  }
+
+  private insertLinkTo(linkTarget: string) {
+    const editor = this.app.workspace.getActiveViewOfType(MarkdownView)?.editor;
+    const linkText = `[[${linkTarget}]]`;
+    if (editor) {
+      editor.replaceSelection(linkText);
+    } else {
+      const file = this.app.workspace.getActiveFile();
+      if (file) this.app.vault.append(file, `\n${linkText}`);
+    }
   }
 }
 
